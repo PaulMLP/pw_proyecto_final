@@ -1,18 +1,40 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Particulas id="particulas" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Particulas from "@/modules/publicacion/components/Particulas.vue";
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
-    HelloWorld
-  }
-}
+    Particulas,
+  },
+};
 </script>
+<style scoped>
+.home {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  height: 100%;
+}
+
+#particulas {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+section {
+  padding: 10px;
+  width: 100%;
+  height: fit-content;
+  border-radius: 5px;
+  background: rgb(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+}
+</style>
