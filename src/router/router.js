@@ -19,6 +19,16 @@ const routes = [
     path: '/foro',
     name: 'foro',
     component: () => import('@/modules/publicacion/pages/ForoView.vue')
+  },
+  {
+    path: '/quejas',
+    name: 'quejas',
+    component: () => import('@/modules/publicacion/pages/QuejasView.vue')
+  },
+  {
+    path: '/estudiantes',
+    name: 'estudiantes',
+    component: () => import('@/views/EstudiantesView.vue')
   }
 ]
 

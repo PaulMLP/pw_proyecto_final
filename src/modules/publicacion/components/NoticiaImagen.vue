@@ -201,50 +201,6 @@ export default {
   gap: 20px;
 }
 
-.slider {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-  gap: 10px;
-}
-
-input[type="range"] {
-  width: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-  height: 10px;
-  border-radius: 5px;
-  background: #ddd;
-  outline: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #3744b3;
-  cursor: pointer;
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border: none;
-  border-radius: 50%;
-  background: #3744b3;
-  cursor: pointer;
-}
-
-#valor {
-  width: 60px;
-  border: gray solid 1px;
-  border-radius: 5px;
-}
-
 #foto {
   display: none;
 }

@@ -64,7 +64,7 @@
           @keyup="filtrarNoticias"
         />
       </span>
-      <div class="contraer">
+      <div class="contraer-editor">
         <div class="filtro-fecha">
           <i class="pi pi-calendar" />
           <Dropdown
@@ -243,15 +243,23 @@ export default {
   height: 30px;
 }
 
+.contraer-editor,
 .contraer {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   width: 90%;
   margin-top: 30px;
 }
 
-.contraer button {
+.contraer{
+  justify-content: flex-end;
+}
+
+.contraer-editor {
+  justify-content: space-between;
+}
+
+.contraer-editor button, .contraer button{
   margin: 0;
   height: 30px;
 }

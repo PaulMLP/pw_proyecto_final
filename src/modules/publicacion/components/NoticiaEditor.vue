@@ -109,6 +109,8 @@ import {
   ingresarNoticiaFachada,
   actualizarNoticiaFachada,
 } from "@/modules/publicacion/helpers/NoticiaCliente";
+import { obtenerFecha } from "@/helpers/funciones";
+
 export default {
   components: {
     NoticiaTexto,
@@ -227,6 +229,25 @@ export default {
       }
     },
 
+    guardarNoticia() {
+      this.obtenerDatosComponentes();
+
+      if (this.titulo) {
+        const ntc = {
+          titulo: this.titulo,
+          texto: this.textoObtenido,
+          imagen: this.imagenObtenido,
+          video: this.videoObtenido,
+          fechaPublicacion: obtenerFecha(),
+        };
+        try {
+          ingresarNoticiaFachada(ntc);
+        } catch (error) {
+          console.log("No se pudo guardar la noticia: ", error);
+        }
+      }
+    },
+
     actualizarNoicia() {
       this.obtenerDatosComponentes();
 
@@ -246,36 +267,6 @@ export default {
           console.log("No se pudo actualizar la noticia: ", error);
         }
       }
-    },
-
-    guardarNoticia() {
-      this.obtenerDatosComponentes();
-
-      if (this.titulo) {
-        const ntc = {
-          titulo: this.titulo,
-          texto: this.textoObtenido,
-          imagen: this.imagenObtenido,
-          video: this.videoObtenido,
-          fechaPublicacion: this.obtenerFecha,
-        };
-        try {
-          ingresarNoticiaFachada(ntc);
-        } catch (error) {
-          console.log("No se pudo guardar la noticia: ", error);
-        }
-      }
-    },
-
-    obtenerFecha() {
-      const fechaHoraActual = new Date();
-
-      const fechaHoraFormateada = fechaHoraActual
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-
-      return fechaHoraFormateada;
     },
   },
 };
