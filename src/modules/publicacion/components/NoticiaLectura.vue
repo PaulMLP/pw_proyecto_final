@@ -16,11 +16,12 @@
         <div class="fecha">
           <span>{{ fechaFormato }}</span>
         </div>
-        <p v-html="noticia.texto"></p>
+        <p v-if="noticia.texto" v-html="noticia.texto"></p>
 
-        <img :src="noticia.imagen" />
+        <img v-if="noticia.imagen" :src="noticia.imagen" />
 
         <iframe
+          v-if="noticia.video"
           width="70%"
           height="350"
           :src="noticia.video"
@@ -36,13 +37,18 @@
 import Panel from "primevue/panel";
 import Menu from "primevue/menu";
 import { eliminarNoticiaFachada } from "@/modules/publicacion/helpers/NoticiaCliente";
+import ConfirmDialog from "primevue/confirmdialog";
+import { useConfirm } from "primevue/useconfirm";
+
 export default {
   components: {
     Panel,
     Menu,
+    ConfirmDialog,
   },
   data() {
     return {
+      confirm: useConfirm(),
       mostrar: true,
       fechaFormato: "",
       items: [
@@ -91,8 +97,16 @@ export default {
       this.$emit("editar", this.noticia);
     },
     eliminar() {
-      eliminarNoticiaFachada(this.noticia.id);
-      this.mostrar = false;
+      this.confirm.require({
+        message: "Se eliminará la noticia",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          eliminarNoticiaFachada(this.noticia.id);
+          window.location.reload();
+        },
+      });
     },
   },
 };

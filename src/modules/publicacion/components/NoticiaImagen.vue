@@ -75,10 +75,6 @@ export default {
   },
 
   props: {
-    guardar: {
-      type: Boolean,
-      required: false,
-    },
     img: {
       type: String,
       required: true,

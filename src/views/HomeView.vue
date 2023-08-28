@@ -1,21 +1,7 @@
 <template>
   <div class="home">
     <Particulas id="particulas" />
-
-    <!-- <Carousel
-      :value="products"
-      :numVisible="1"
-      :responsiveOptions="responsiveOptions"
-    >
-      <template #item="slotProps">
-        <img
-          :src="slotProps.data.image"
-          alt="imagen de galeria"
-          style="height:450px"
-        />
-      </template>
-    </Carousel> -->
-    <div class="card flex justify-content-center" style="z-index: 1">
+    <div class="cont-galeria">
       <Galleria
         :value="images"
         :numVisible="1"
@@ -34,19 +20,21 @@
         </template>
       </Galleria>
     </div>
+    <div class="informacion">
+      <div class="card"></div>
+      <div class="card"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import Particulas from "@/modules/publicacion/components/Particulas.vue";
-import Carousel from "primevue/carousel";
 import Galleria from "primevue/galleria";
 
 export default {
   name: "HomeView",
   components: {
     Particulas,
-    Carousel,
     Galleria,
   },
   data() {
@@ -79,25 +67,32 @@ export default {
 };
 </script>
 <style scoped>
-.home {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100%;
-}
-
 #particulas {
   position: fixed;
   height: 100%;
   width: 100%;
 }
 
-section {
-  padding: 10px;
+.cont-galeria,
+.card {
+  z-index: 1;
+}
+.informacion {
   width: 100%;
-  height: fit-content;
+  padding: 10px;
+  border: solid gray;
+  gap: 2%;
+}
+.informacion,
+.card {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  height: 450px;
+  width: 300px;
   border-radius: 5px;
-  background: rgb(0, 0, 0, 0.2);
-  backdrop-filter: blur(2px);
+  border: solid blue;
 }
 </style>

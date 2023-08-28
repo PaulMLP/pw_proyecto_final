@@ -62,18 +62,17 @@ export default {
 
   methods: {
     async enviar() {
-      if(!this.descripcion){
-        this.toast.add({
-          severity: "warn",
-          summary: "Advertencia",
-          detail: "Se debe ingresar la descripción",
-          life: 3000,
-        });
-        return;
-      }
-      
       try {
         this.estudiante = await obtenerEstudianteFachada(this.cedula);
+        if (!this.descripcion) {
+          this.toast.add({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "Se debe ingresar la descripción",
+            life: 3000,
+          });
+          return;
+        }
       } catch (error) {
         this.toast.add({
           severity: "error",
@@ -87,16 +86,18 @@ export default {
       const queja = {
         estudiante: this.estudiante,
         descripcion: this.descripcion,
-        fecha: obtenerFecha(),
+        fechaPublicacion: obtenerFecha(),
       };
+
       try {
-        ingresarQuejaFachada(queja);
+        await ingresarQuejaFachada(queja);
         this.toast.add({
           severity: "success",
           summary: "Exito",
           detail: "Se ingreso la queja con exito",
           life: 3000,
         });
+        window.location.reload();
       } catch (error) {
         this.toast.add({
           severity: "error",

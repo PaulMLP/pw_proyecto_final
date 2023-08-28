@@ -17,7 +17,6 @@
         </template>
       </Editor>
     </div>
-    <div v-if="show" v-html="value" class="texto-vista"></div>
     <Divider />
   </div>
 </template>
@@ -47,10 +46,6 @@ export default {
   },
 
   props: {
-    guardar: {
-      type: Boolean,
-      required: false,
-    },
     texto: {
       type: String,
       required: true,

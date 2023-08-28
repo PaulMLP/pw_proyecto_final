@@ -5,8 +5,8 @@ const obtenerQuejasFachada = async () => {
   return await obtenerQuejas();
 };
 
-const ingresarQuejaFachada = (bodyQueja) => {
-  ingresarQueja(bodyQueja);
+const ingresarQuejaFachada = async (bodyQueja) => {
+  await ingresarQueja(bodyQueja);
 };
 
 const actualizarQuejaFachada = (bodyQueja, id) => {
@@ -25,7 +25,7 @@ const obtenerQuejas = async () => {
   return data;
 };
 
-const ingresarQueja = (bodyQueja) => {
+const ingresarQueja = async (bodyQueja) => {
   axios
     .post(`http://localhost:8083/API/v1.0/Facultad/quejas`, bodyQueja)
     .then((r) => r.data);

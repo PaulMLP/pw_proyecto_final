@@ -1,62 +1,22 @@
 <template>
   <div class="noticias">
     <div class="switch">
-      <InputSwitch class="custom-inputswitch" v-model="checked" />
-    </div>
-
-    <div v-if="!checked" class="noticias-vista">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search" />
-        <InputText
-          v-model="busqueda"
-          placeholder="Buscar por titulo"
-          @keyup="filtrarNoticias"
-        />
-      </span>
-      <div class="contraer">
-        <Button
-          :icon="iconContraer"
-          :label="labelColapso"
-          severity="secondary"
-          raised
-          @click="contraer"
-        />
-      </div>
-      <NoticiaLectura
-        v-for="noticia in noticiasAux"
-        :key="noticia.id"
-        :noticia="noticia"
-        :panelCollapsed="colapsado"
-        :editable="false"
+      <InputSwitch
+        class="custom-inputswitch"
+        v-model="checked"
+        @change="mensajeVista"
       />
     </div>
 
-    <div class="editor" v-else>
-      <Button
-        icon="pi pi-plus"
-        v-if="!noticiaEditor && checked"
-        label="Agregar Noticia"
-        raised
-        @click="addNoticia"
-      />
-
-      <NoticiaEditor
-        class="componente"
-        v-if="noticiaEditor"
-        :noticia="noticia"
-        :guardar="guardar"
-      />
-      <Button
-        v-if="noticiaEditor"
-        icon="pi pi-times"
-        label="Cancelar"
-        severity="secondary"
-        raised
-        @click="cancelar"
-      />
-    </div>
-    <div v-if="!noticiaEditor && checked" class="noticias-vista">
-      <span class="p-input-icon-left">
+    <Button
+      icon="pi pi-plus"
+      v-if="!noticiaEditor && checked"
+      label="Agregar Noticia"
+      raised
+      @click="addNoticia"
+    />
+    <div class="filtros" v-if="!noticiaEditor">
+      <span class="p-input-icon-left" style="margin-top: 40px">
         <i class="pi pi-search" />
         <InputText
           v-model="busqueda"
@@ -91,6 +51,33 @@
           @click="contraer"
         />
       </div>
+    </div>
+    <div v-if="!checked" class="noticias-vista">
+      <NoticiaLectura
+        v-for="noticia in noticiasAux"
+        :key="noticia.id"
+        :noticia="noticia"
+        :panelCollapsed="colapsado"
+        :editable="false"
+      />
+    </div>
+
+    <div class="editor" v-else>
+      <NoticiaEditor
+        class="componente"
+        v-if="noticiaEditor"
+        :noticia="noticia"
+      />
+      <Button
+        v-if="noticiaEditor"
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        raised
+        @click="cancelar"
+      />
+    </div>
+    <div v-if="!noticiaEditor && checked" class="noticias-vista">
       <NoticiaLectura
         v-for="noticia in noticiasAux"
         :key="noticia.id"
@@ -100,6 +87,8 @@
         @editar="editarNoticia($event)"
       />
     </div>
+    <ConfirmDialog />
+    <Toast />
   </div>
 </template>
 
@@ -113,7 +102,17 @@ import NoticiaLectura from "../components/NoticiaLectura.vue";
 import Panel from "primevue/panel";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
-
+import ConfirmDialog from "primevue/confirmdialog";
+import { useConfirm } from "primevue/useconfirm";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import {
+  obtenerFecha,
+  compararDia,
+  compararSemana,
+  compararMes,
+  compararAnio,
+} from "@/helpers/funciones";
 export default {
   components: {
     SelectButton,
@@ -124,13 +123,16 @@ export default {
     NoticiaLectura,
     Panel,
     Dropdown,
+    ConfirmDialog,
+    Toast,
   },
   data() {
     return {
+      confirm: useConfirm(),
       iconContraer: "pi pi-minus",
       colapsado: false,
       labelColapso: "Contraer Todo",
-
+      toast: useToast(),
       //Valor de busqueda
       busqueda: "",
 
@@ -142,7 +144,7 @@ export default {
       noticiasAux: [],
 
       //Noticia de Panel
-      noticia: null,
+      noticia: {},
 
       //Cambiar entre Admin y Lectura
       checked: true,
@@ -152,10 +154,9 @@ export default {
 
       fechaSeleccionada: null,
       fechas: [
-        { name: "Todo el tiempo", code: "TT" },
         { name: "Hoy", code: "HY" },
         { name: "Ultimos 7 dias", code: "U7" },
-        { name: "Ultimo mes", code: "UM" },
+        { name: "Este mes", code: "EM" },
         { name: "Este año", code: "EA" },
       ],
     };
@@ -163,8 +164,26 @@ export default {
   async mounted() {
     this.noticias = await obtenerNoticiasFachada();
     this.noticiasAux = this.noticias;
+    this.mensajeVista();
   },
   methods: {
+    mensajeVista() {
+      if (this.checked) {
+        this.toast.add({
+          severity: "info",
+          summary: "Modo Administrador",
+          detail: "Estas en la vista de administrador",
+          life: 3000,
+        });
+      } else {
+        this.toast.add({
+          severity: "info",
+          summary: "Modo Lectura",
+          detail: "Estas en la vista de solo lectura",
+          life: 3000,
+        });
+      }
+    },
     contraer() {
       if (this.colapsado) {
         this.iconContraer = "pi pi-minus";
@@ -178,23 +197,56 @@ export default {
     },
 
     addNoticia() {
+      obtenerFecha();
       this.noticiaEditor = !this.noticiaEditor;
       this.guardar = false;
     },
 
     editarNoticia(ntc) {
-      this.noticiaEditor = true;
       this.noticia = ntc;
+      this.noticiaEditor = true;
     },
 
     cancelar() {
-      this.noticiaEditor = false;
+      this.confirm.require({
+        message: "Se cancelará la edición de la noticia",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          this.noticiaEditor = false;
+        },
+      });
     },
 
     filtrarPorFecha() {
       if (this.fechaSeleccionada) {
-        console.log(this.fechaSeleccionada.code);
+        switch (this.fechaSeleccionada.code) {
+          case "HY":
+            this.noticiasAux = this.noticias.filter((noticia) =>
+              compararDia(obtenerFecha(), noticia.fechaPublicacion)
+            );
+            break;
+          case "U7":
+            this.noticiasAux = this.noticias.filter((noticia) =>
+              compararSemana(obtenerFecha(), noticia.fechaPublicacion)
+            );
+            break;
+          case "EM":
+            this.noticiasAux = this.noticias.filter((noticia) =>
+              compararMes(obtenerFecha(), noticia.fechaPublicacion)
+            );
+            break;
+          case "EA":
+            this.noticiasAux = this.noticias.filter((noticia) =>
+              compararAnio(obtenerFecha(), noticia.fechaPublicacion)
+            );
+            break;
+          default:
+            this.noticiasAux = this.noticias;
+        }
       } else {
+        this.noticiasAux = this.noticias;
         console.log("No se selecciono.");
       }
     },
@@ -213,8 +265,8 @@ export default {
 </script>
 
 <style scoped>
-.editor {
-  padding-top: 50px;
+.noticias {
+  padding-bottom: 20px;
 }
 
 .noticias,
@@ -243,23 +295,19 @@ export default {
   height: 30px;
 }
 
-.contraer-editor,
-.contraer {
+.contraer-editor {
   display: flex;
   align-items: flex-end;
-  width: 90%;
+  width: 100%;
   margin-top: 30px;
-}
-
-.contraer{
-  justify-content: flex-end;
-}
-
-.contraer-editor {
   justify-content: space-between;
 }
 
-.contraer-editor button, .contraer button{
+.filtros {
+  width: 80%;
+}
+
+.contraer-editor button {
   margin: 0;
   height: 30px;
 }
@@ -268,7 +316,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 30px;
   width: 90%;
 }
 

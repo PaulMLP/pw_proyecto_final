@@ -27,7 +27,6 @@
         ref="notiTexto"
         v-if="isTexto"
         :texto="texto"
-        :guardar="guardar"
         @quitar="quitarTexto"
       />
 
@@ -75,7 +74,7 @@
         </div>
       </div>
       <div class="boton">
-        <Button icon="pi pi-eraser" label="Limpiar" @click="cancelar" raised />
+        <Button icon="pi pi-eraser" label="Limpiar" @click="limpiar" raised />
         <Button
           v-if="!editar"
           icon="pi pi-check"
@@ -105,24 +104,31 @@ import Tag from "primevue/tag";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import NoticiaLecturaVue from "./NoticiaLectura.vue";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 import {
   ingresarNoticiaFachada,
   actualizarNoticiaFachada,
 } from "@/modules/publicacion/helpers/NoticiaCliente";
 import { obtenerFecha } from "@/helpers/funciones";
-
+import ConfirmDialog from "primevue/confirmdialog";
+import { useConfirm } from "primevue/useconfirm";
 export default {
   components: {
     NoticiaTexto,
     NoticiaImagen,
     NoticiaVideo,
     NoticiaLecturaVue,
+    Toast,
     InputText,
     Button,
     Tag,
+    ConfirmDialog,
   },
   data() {
     return {
+      toast: useToast(),
+      confirm: useConfirm(),
       //Iconos de opciones
       addTextIcon:
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB0UlEQVR4nO2Wyy4EURCGP2ESQoaNWEqskCBI3B6ABxh7HoAXsMfCmBiXNXsewNhYsbHDemKBiIUYxGVcWk7yT9JppvtM62mb+ZNKTqoq5/9Pna46DTXUUEN49AOOrI9/wLJLwFLc5HVAHviS5eWLDRM6+RFwrPV4nAI2RDoHzGu9Hhd5A3ADfAAdQDvwDtwqVnVM6cT7Ll9Ovsk4BOyIbMblm5Vvu9rkjcA98AK0uvxJ4BkoAE3VFDCtk+7+EttTLFVNAXs+JCnFDoE0cAY8AE/AOZABev9CnlTpC7oKL9rUDY6Pmc7JAokwAmYDNi/Zq2bCKNAsG9PseFPOQRgROQvyS2DAZ49B4Eq5a5WQd6i8ZgDVe2JdwKdO7iUvCXNjSJUw+/XYCvAbtyuKmbvFQoDBpvyrtgKOfB6cE8VGKhAwJv+ZDXmnntyLMk/unTZr8ZCWM5TrqE0DsaDkxTLxhxACkloXbAScBvx2nStu2s72CsYruYIgZLSZ6XNbAVvyp4kAvZpwb+rzIAHDQFFt2E1EyIro6hcRXvJr5ZrKRYaExqujSmzqnltkEyp7UTm5sO8BASLMePV7kEzMnDxycjfMN2EmnPnCH2VmbT64H6P3G3T4uKVKoS1cAAAAAElFTkSuQmCC",
@@ -138,9 +144,9 @@ export default {
 
       titulo: "",
 
-      texto: null,
-      imagen: null,
-      video: null,
+      texto: "",
+      imagen: "",
+      video: "",
 
       editar: false,
 
@@ -157,16 +163,10 @@ export default {
       type: Object,
       required: true,
     },
-
-    //Boolean que indica si guardar los datos de la noticia
-    guardar: {
-      type: Boolean,
-      required: false,
-    },
   },
 
   mounted() {
-    if (this.noticia) {
+    if (this.noticia.titulo) {
       this.editar = true;
       this.titulo = this.noticia.titulo;
 
@@ -198,61 +198,147 @@ export default {
       this.isVideo = true;
     },
     quitarTexto() {
-      this.isTexto = false;
+      this.confirm.require({
+        message: "Se eliminará el componente",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          this.texto = "";
+          this.isTexto = false;
+        },
+      });
     },
     quitarImagen() {
-      this.isImagen = false;
+      this.confirm.require({
+        message: "Se eliminará el componente",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          this.imagen = "";
+          this.isImagen = false;
+        },
+      });
     },
     quitarVideo() {
-      this.isVideo = false;
+      this.confirm.require({
+        message: "Se eliminará el componente",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          this.video = "";
+          this.isVideo = false;
+        },
+      });
     },
 
-    cancelar() {
-      this.titulo = "";
-      this.isTexto = false;
-      this.isImagen = false;
-      this.isVideo = false;
+    limpiar() {
+      this.confirm.require({
+        message: "Seguro que desea limpiar los campos de la noticia",
+        header: "Se limpiaran los campos",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          this.titulo = "";
+          this.isTexto = false;
+          this.isImagen = false;
+          this.isVideo = false;
+        },
+      });
     },
 
     obtenerDatosComponentes() {
       const notiTexto = this.$refs.notiTexto;
+      let countComponentes = 0;
       if (notiTexto) {
-        this.textoObtenido = notiTexto.value;
+        if (notiTexto.value) {
+          countComponentes++;
+          this.textoObtenido = notiTexto.value;
+        } else {
+          this.toast.add({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "Ingrese texto o elimine el componente",
+            life: 3000,
+          });
+          return false;
+        }
       }
       const notiImagen = this.$refs.notiImagen;
       if (notiImagen) {
-        this.imagenObtenido = notiImagen.imagen;
+        if (notiImagen.imagen) {
+          countComponentes++;
+          this.imagenObtenido = notiImagen.imagen;
+        } else {
+          this.toast.add({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "Ingrese imagen o elimine el componente",
+            life: 3000,
+          });
+          return false;
+        }
       }
       const notiVideo = this.$refs.notiVideo;
       if (notiVideo) {
-        this.videoObtenido = notiVideo.urlEmbed;
+        if (notiVideo.urlEmbed) {
+          countComponentes++;
+          this.videoObtenido = notiVideo.urlEmbed;
+        } else {
+          this.toast.add({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "Ingrese video o elimine el componente",
+            life: 3000,
+          });
+          return false;
+        }
+      }
+
+      if (countComponentes < 1) {
+        this.toast.add({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "Se debe ingresar al menos un componente",
+          life: 3000,
+        });
+        return false;
+      } else {
+        return true;
       }
     },
 
     guardarNoticia() {
-      this.obtenerDatosComponentes();
-
       if (this.titulo) {
-        const ntc = {
-          titulo: this.titulo,
-          texto: this.textoObtenido,
-          imagen: this.imagenObtenido,
-          video: this.videoObtenido,
-          fechaPublicacion: obtenerFecha(),
-        };
-        try {
-          ingresarNoticiaFachada(ntc);
-        } catch (error) {
-          console.log("No se pudo guardar la noticia: ", error);
+        if (this.obtenerDatosComponentes()) {
+          const ntc = {
+            titulo: this.titulo,
+            texto: this.textoObtenido,
+            imagen: this.imagenObtenido,
+            video: this.videoObtenido,
+            fechaPublicacion: obtenerFecha(),
+          };
+          try {
+            ingresarNoticiaFachada(ntc);
+          } catch (error) {
+            console.log("No se pudo guardar la noticia: ");
+          }
         }
+      } else {
+        this.toast.add({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "Se debe ingresar un título",
+          life: 3000,
+        });
       }
     },
 
     actualizarNoicia() {
-      this.obtenerDatosComponentes();
-
       //Actualizar la noticia
-      if (this.titulo) {
+      if (this.titulo && this.obtenerDatosComponentes()) {
         const ntc = {
           titulo: this.titulo,
           texto: this.textoObtenido,
@@ -260,12 +346,20 @@ export default {
           video: this.videoObtenido,
           fechaPublicacion: this.noticia.fechaPublicacion,
         };
-        try {
-          actualizarNoticiaFachada(ntc, this.noticia.id);
-          window.location.reload();
-        } catch (error) {
-          console.log("No se pudo actualizar la noticia: ", error);
-        }
+
+        this.confirm.require({
+          message: "Se editará la noticia",
+          header: "Confirmación de Actualización",
+          icon: "pi pi-check-circle" ,
+          accept: () => {
+            try {
+              actualizarNoticiaFachada(ntc, this.noticia.id);
+              window.location.reload();
+            } catch (error) {
+              console.log("No se pudo actualizar la noticia: ", error);
+            }
+          },
+        });
       }
     },
   },

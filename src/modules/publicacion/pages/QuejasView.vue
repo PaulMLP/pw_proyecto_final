@@ -41,22 +41,6 @@ export default {
       checked: true,
       agregarQueja: false,
       quejas: null,
-      // [
-      //   {
-      //     id: "1",
-      //     nombre: "Paul",
-      //     fecha: "12-12-2023",
-      //     descripcion:
-      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!",
-      //   },
-      //   {
-      //     id: "2",
-      //     nombre: "Leonardo",
-      //     fecha: "01-09-2023",
-      //     descripcion:
-      //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!",
-      //   },
-      // ],
     };
   },
 
