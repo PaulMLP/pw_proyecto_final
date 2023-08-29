@@ -52,6 +52,7 @@ export default {
     },
     modalAgregar(e) {
       this.visibleAgregar = e;
+      window.location.reload();
     },
     getEstudiante(e) {
       this.abrirModalEditar();
@@ -62,6 +63,7 @@ export default {
     },
     modalEditar(e) {
       this.visibleEditar = e;
+      window.location.reload();
     },
   },
 };

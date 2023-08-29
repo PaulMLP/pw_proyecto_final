@@ -9,6 +9,7 @@
     </div>
 
     <Button
+      style="margin-top: 50px"
       icon="pi pi-plus"
       v-if="!noticiaEditor && checked"
       label="Agregar Noticia"
@@ -19,6 +20,7 @@
       <span class="p-input-icon-left" style="margin-top: 40px">
         <i class="pi pi-search" />
         <InputText
+          class="search"
           v-model="busqueda"
           placeholder="Buscar por titulo"
           @keyup="filtrarNoticias"
@@ -166,6 +168,7 @@ export default {
     this.noticiasAux = this.noticias;
     this.mensajeVista();
   },
+
   methods: {
     mensajeVista() {
       if (this.checked) {
@@ -184,6 +187,7 @@ export default {
         });
       }
     },
+
     contraer() {
       if (this.colapsado) {
         this.iconContraer = "pi pi-minus";
@@ -325,13 +329,56 @@ export default {
   padding: 10px 0px;
 }
 
+i {
+  font-size: 2.5vmin;
+}
+
 button {
-  margin-top: 30px;
-  background: #3744b3;
+  margin-top: 40px;
+  font-size: 2.5vmin;
   transition: all 0.3s linear;
 }
 
 button:hover {
   transform: scale(1.05);
+}
+
+/*Media Query*/
+@media screen and (max-width: 560px) {
+  i {
+    font-size: 3vmin;
+  }
+
+  .contraer-editor {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  span i {
+    display: none;
+  }
+
+  .search {
+    font-size: 3.5vmin;
+    padding: 5px;
+  }
+}
+
+@media screen and (max-width: 470px) {
+
+  .filtro-fecha i {
+    display: none;
+  }
+
+  .filtro-fecha {
+    flex-direction: column;
+  }
+
+  button {
+    font-size: 3.5vmin;
+    padding: 5px;
+  }
 }
 </style>

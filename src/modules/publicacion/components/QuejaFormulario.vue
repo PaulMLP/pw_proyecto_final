@@ -55,24 +55,33 @@ export default {
       cedula: null,
       descripcion: null,
       toast: useToast(),
-      errorMessage: "campo necesario",
       estudiante: null,
     };
   },
 
   methods: {
     async enviar() {
+      if (!this.cedula) {
+        this.toast.add({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "Se debe ingresar una cédula",
+          life: 3000,
+        });
+        return;
+      }
+      if (!this.descripcion) {
+        this.toast.add({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "Se debe ingresar la descripción",
+          life: 3000,
+        });
+        return;
+      }
+      
       try {
         this.estudiante = await obtenerEstudianteFachada(this.cedula);
-        if (!this.descripcion) {
-          this.toast.add({
-            severity: "warn",
-            summary: "Advertencia",
-            detail: "Se debe ingresar la descripción",
-            life: 3000,
-          });
-          return;
-        }
       } catch (error) {
         this.toast.add({
           severity: "error",
@@ -101,7 +110,7 @@ export default {
       } catch (error) {
         this.toast.add({
           severity: "error",
-          summary: "error",
+          summary: "Error",
           detail: "Error al ingresar queja",
           life: 3000,
         });

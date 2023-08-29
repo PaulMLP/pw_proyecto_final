@@ -4,17 +4,11 @@
       <InputText class="input" id="cedula" v-model="datos.cedula" type="text" />
       <label for="cedula">Cédula</label>
     </span>
-    <small class="p-error" id="text-error">{{
-      errorMessage || "&nbsp;"
-    }}</small>
 
     <span class="p-float-label">
       <InputText class="input" id="nombre" v-model="datos.nombre" type="text" />
       <label for="nombre">Nombre</label>
     </span>
-    <small class="p-error" id="text-error">{{
-      errorMessage || "&nbsp;"
-    }}</small>
 
     <span class="p-float-label">
       <InputText
@@ -25,15 +19,12 @@
       />
       <label for="apellido">Apellido</label>
     </span>
-    <small class="p-error" id="text-error">{{
-      errorMessage || "&nbsp;"
-    }}</small>
 
     <Button
       v-if="!opciones"
       label="Agregar Imagen"
       icon="pi pi-camera"
-      style="margin-bottom: 10px"
+      style="margin: 20px"
       @click="abrirOpciones"
     />
 
@@ -69,21 +60,24 @@
       <Avatar :image="datos.imagen" class="mr-2" size="xlarge" shape="circle" />
     </div>
     <Button label="Confirmar" severity="success" raised @click="confirmar" />
+    <Toast />
   </form>
 </template>
 
 <script>
-import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Avatar from "primevue/avatar";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+
 export default {
-  components: { Dialog, Button, InputText, Avatar },
+  components: { Button, InputText, Avatar, Toast },
   data() {
     return {
+      toast: useToast(),
       datos: { cedula: "", nombre: "", apellido: "", imagen: "" },
 
-      errorMessage: "",
       // Mostrar opciones de seleccion de imagen
       opciones: false,
 
@@ -156,7 +150,21 @@ export default {
     },
 
     confirmar() {
-      console.log(this.datos);
+      if (!this.datos.cedula || !this.datos.nombre || !this.datos.apellido) {
+        this.toast.add({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "Complete todos los campos",
+          life: 3000,
+        });
+        return;
+      }
+
+      if (!this.datos.imagen) {
+        this.datos.imagen =
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
+      }
+      this.$emit("getEstudiante", this.datos);
     },
   },
 };
@@ -168,11 +176,10 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 2;
 }
 
 span {
-  margin-top: 20px;
+  margin-top: 30px;
   width: 90%;
 }
 

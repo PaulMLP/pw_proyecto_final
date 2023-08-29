@@ -47,8 +47,9 @@
             /> </template
         ></Column>
       </DataTable>
-      <ConfirmDialog />
     </div>
+    <ConfirmDialog />
+    <Toast />
   </div>
 </template>
 
@@ -59,10 +60,15 @@ import DataTable from "primevue/datatable";
 import Avatar from "primevue/avatar";
 import Tag from "primevue/tag";
 import InputText from "primevue/inputtext";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 import ConfirmDialog from "primevue/confirmdialog";
 import EstudianteCrearFormulario from "@/components/EstudianteCrearFormulario.vue";
 import { useConfirm } from "primevue/useconfirm";
-import { obtenerTodosEstudiantesFachada } from "@/helpers/EstudiaCliente";
+import {
+  obtenerTodosEstudiantesFachada,
+  eliminarEstudianteFachada,
+} from "@/helpers/EstudiaCliente";
 export default {
   components: {
     EstudianteCrearFormulario,
@@ -73,12 +79,14 @@ export default {
     Tag,
     InputText,
     ConfirmDialog,
+    Toast,
   },
   data() {
     return {
       cedula: "",
       estudiantes: null,
       confirm: useConfirm(),
+      toast: useToast(),
     };
   },
   async mounted() {
@@ -97,22 +105,35 @@ export default {
     editarEstudiante(data) {
       this.$emit("getEstudiante", data);
     },
-    confirmarEliminarEstudiante(e) {
+    confirmarEliminarEstudiante(id) {
       this.confirm.require({
-        message: "Se eliminará el estudiante con id: " + e,
+        message: "Se eliminará el estudiante con id: " + id,
         header: "Confirmación de Eliminación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
         accept: () => {
-          this.eliminarEstudiante(e);
-        },
-        reject: () => {
-          console.log("rechazo");
+          this.eliminarEstudiante(id);
         },
       });
     },
-    eliminarEstudiante(e) {
-      console.log("logica de eliminacion API");
+    eliminarEstudiante(id) {
+      try {
+        eliminarEstudianteFachada(id);
+        this.toast.add({
+          severity: "success",
+          summary: "Exito",
+          detail: "Se eliminó con exito",
+          life: 3000,
+        });
+        window.location.reload();
+      } catch {
+        this.toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se pudo eliminar el estudiante",
+          life: 3000,
+        });
+      }
     },
   },
 };
@@ -130,5 +151,11 @@ export default {
   box-shadow: 0 0 10px gray;
   border-radius: 5px;
   overflow: hidden;
+}
+
+@media screen and (max-width: 1060px) {
+  .tabla {
+    width: 100%;
+  }
 }
 </style>

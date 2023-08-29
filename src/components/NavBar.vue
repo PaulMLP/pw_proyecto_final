@@ -3,7 +3,7 @@
     <nav>
       <div class="logo"><img src="@/assets/IDI_logo.png" /></div>
       <div class="menu-icon" @click="toggleMenu">
-        <i :class="icon" style="font-size: 2rem"></i>
+        <i :class="icon" style="font-size: 5vmin"></i>
       </div>
       <ul :class="menuOpen ? 'show' : ''">
         <router-link to="/">Inicio</router-link>
@@ -67,6 +67,7 @@ ul {
 }
 
 a {
+   font-size: 2.5vmin;
   color: #6c757d;
   font-weight: bold;
   padding: 15px;
@@ -92,7 +93,8 @@ a {
   font-size: 30px;
   color: #3744b3;
 }
-@media (max-width: 600px) {
+
+@media screen and (max-width: 700px) {
   .logo {
     display: none;
   }

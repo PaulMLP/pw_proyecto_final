@@ -1,16 +1,22 @@
 <template>
   <div class="quejas">
     <div class="switch">
-      <InputSwitch class="custom-inputswitch" v-model="checked" />
+      <InputSwitch
+        class="custom-inputswitch"
+        v-model="checked"
+        @change="mensajeVista"
+      />
     </div>
     <div class="contenedor-formulario">
       <Button
+        class="btn-agregar"
         v-if="!agregarQueja"
         icon="pi pi-plus"
         label="Agregar Queja"
         raised
         @click="agregarQueja = true"
       />
+      <i class="pi pi-plus"></i>
       <QuejaFormulario
         v-if="agregarQueja"
         @cancelar="cancelarFormulario($event)"
@@ -23,6 +29,7 @@
     <div class="admin" v-else>
       <QuejasLectura v-if="quejas" :check="true" :quejas="quejas" />
     </div>
+    <Toast />
   </div>
 </template>
 
@@ -33,22 +40,53 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import QuejasLectura from "../components/QuejasLectura.vue";
 import { obtenerQuejasFachada } from "@/modules/publicacion/helpers/QuejaCliente";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+
 export default {
-  components: { QuejaFormulario, InputSwitch, Card, Button, QuejasLectura },
+  components: {
+    QuejaFormulario,
+    InputSwitch,
+    Card,
+    Button,
+    QuejasLectura,
+    Toast,
+  },
+
   data() {
     return {
       //Cambiar entre Admin y Lectura
       checked: true,
       agregarQueja: false,
       quejas: null,
+      toast: useToast(),
     };
   },
 
-  async created() {
+  async mounted() {
     this.quejas = await obtenerQuejasFachada();
+    this.mensajeVista();
   },
 
   methods: {
+    mensajeVista() {
+      if (this.checked) {
+        this.toast.add({
+          severity: "info",
+          summary: "Modo Administrador",
+          detail: "Estas en la vista de administrador",
+          life: 3000,
+        });
+      } else {
+        this.toast.add({
+          severity: "info",
+          summary: "Modo Lectura",
+          detail: "Estas en la vista de solo lectura",
+          life: 3000,
+        });
+      }
+    },
+
     cancelarFormulario(event) {
       this.agregarQueja = event;
     },
@@ -61,6 +99,11 @@ export default {
   background: rgb(234, 234, 234);
   padding-bottom: 20px;
 }
+.p-inputswitch-slider{
+   width: 10px
+}
+
+
 
 .switch {
   position: absolute;
@@ -90,6 +133,28 @@ export default {
   gap: 20px;
 }
 
-@media screen and (max-width: 500px) {
+.contenedor-formulario button {
+  font-size: 3vmin;
+}
+
+.pi-plus {
+  display: none;
+  background: #6366f1;
+  color: white;
+  width: 20%;
+  padding: 10px;
+  font-size: 2.5vmin;
+  border-radius: 5px;
+  box-shadow: 0px 1px 2px 1px gray;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 620px) {
+  .btn-agregar {
+    display: none;
+  }
+  .contenedor-formulario i {
+    display: inline-block;
+  }
 }
 </style>

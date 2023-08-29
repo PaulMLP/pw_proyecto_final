@@ -122,10 +122,12 @@ export default {
   width: 100%;
   box-shadow: 0 0 20px 5px gainsboro;
   border-radius: 10px;
+  font-size: 3.5vmin;
 }
 
 .fecha {
   display: flex;
+    font-size: 2.5vmin;
   width: 100%;
   justify-content: flex-end;
   color: rgb(157, 157, 157);
@@ -139,12 +141,25 @@ export default {
 
 p {
   padding: 0px 30px;
-  text-align: justify;
+  text-align: left;
+  font-size: 3vmin;
 }
 
 img {
   margin: 20px;
   max-width: 50%;
   height: 30%;
+}
+
+/*Media Query*/
+@media screen and (max-width: 560px) {
+  .panel {
+    font-size: 4vmin;
+  }
+
+  p {
+    padding: 0px 5px;
+    font-size: 3.5vmin;
+  }
 }
 </style>
