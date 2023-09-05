@@ -1,4 +1,11 @@
 import axios from "axios";
+import tokenService from "@/services/tokenService";
+
+const token = tokenService.getToken();
+const headers = {
+  Authorization: `Bearer ${token}`,
+  Mensaje: "token",
+};
 
 /* Fachadas */
 const obtenerNoticiasFachada = async () => {
@@ -19,29 +26,55 @@ const eliminarNoticiaFachada = async (id) => {
 
 /* Lambdas para CRUD */
 const obtenerNoticias = async () => {
-  const data = axios
-    .get("http://localhost:8083/API/v1.0/Facultad/noticias")
-    .then((r) => r.data);
-  return data;
+  try {
+    const data = axios
+      .get("http://localhost:8083/API/v1.0/Facultad/noticias", {
+        headers: headers,
+      })
+      .then((r) => r.data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const ingresarNoticia = (bodyNoticia) => {
-  axios
-    .post(`http://localhost:8083/API/v1.0/Facultad/noticias`, bodyNoticia)
-    .then((r) => r.data);
+  try {
+    axios
+      .post(`http://localhost:8083/API/v1.0/Facultad/noticias`, bodyNoticia, {
+        headers: headers,
+      })
+      .then((r) => r.data);
+  } catch (error) {
+    throw error;
+  }
 };
 
 const actualizarNoticia = (bodyNoticia, id) => {
-  axios
-    .put(`http://localhost:8083/API/v1.0/Facultad/noticias/${id}`, bodyNoticia)
-    .then((r) => r.data);
+  try {
+    axios
+      .put(
+        `http://localhost:8083/API/v1.0/Facultad/noticias/${id}`,
+        bodyNoticia,
+        { headers: headers }
+      )
+      .then((r) => r.data);
+  } catch (error) {
+    throw error;
+  }
 };
 
 const eliminarNoticia = async (id) => {
-  const data = axios
-    .delete(`http://localhost:8083/API/v1.0/Facultad/noticias/${id}`)
-    .then((r) => r.data);
-  return data;
+  try {
+    const data = axios
+      .delete(`http://localhost:8083/API/v1.0/Facultad/noticias/${id}`, {
+        headers: headers,
+      })
+      .then((r) => r.data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export {

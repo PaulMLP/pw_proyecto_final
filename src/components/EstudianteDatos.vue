@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <Carga v-if="!estudiantes" />
+  <div v-else>
     <div class="contenedor-tabla">
       <DataTable
         :value="estudiantes"
@@ -7,7 +8,7 @@
         class="tabla"
       >
         <template #header>
-          <span style="font-size: 1.5rem">Estudiantes</span>
+          <span style="font-size: 3.5vmin">Estudiantes</span>
         </template>
         <Column field="cedula" header="Cédula"></Column>
         <Column field="nombre" header="Nombre"></Column>
@@ -54,23 +55,30 @@
 </template>
 
 <script>
+import Carga from "@/views/Carga.vue";
 import Button from "primevue/button";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
 import Avatar from "primevue/avatar";
 import Tag from "primevue/tag";
 import InputText from "primevue/inputtext";
+import EstudianteCrearFormulario from "@/components/EstudianteCrearFormulario.vue";
+
+//Dialogo
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import ConfirmDialog from "primevue/confirmdialog";
-import EstudianteCrearFormulario from "@/components/EstudianteCrearFormulario.vue";
 import { useConfirm } from "primevue/useconfirm";
+
+//Helpers
 import {
   obtenerTodosEstudiantesFachada,
   eliminarEstudianteFachada,
 } from "@/helpers/EstudiaCliente";
+
 export default {
   components: {
+    Carga,
     EstudianteCrearFormulario,
     Button,
     Column,
@@ -90,7 +98,16 @@ export default {
     };
   },
   async mounted() {
-    this.estudiantes = await obtenerTodosEstudiantesFachada();
+    try {
+      this.estudiantes = await obtenerTodosEstudiantesFachada();
+    } catch (error) {
+      this.toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Error al obtener estudiantes",
+        life: 3000,
+      });
+    }
   },
   methods: {
     getSeverity(estado) {
@@ -111,6 +128,8 @@ export default {
         header: "Confirmación de Eliminación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
           this.eliminarEstudiante(id);
         },
@@ -151,6 +170,7 @@ export default {
   box-shadow: 0 0 10px gray;
   border-radius: 5px;
   overflow: hidden;
+  font-size: 2.4vmin;
 }
 
 @media screen and (max-width: 1060px) {

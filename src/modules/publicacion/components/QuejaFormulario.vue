@@ -1,7 +1,7 @@
 <template>
   <div class="formulario-contenedor">
-    <h2>Llena el formulario de quejas y enviala</h2>
     <form @submit="onSubmit" class="formulario">
+      <h2 style="color: #6f4dff">Formulario de Queja</h2>
       <span class="p-float-label">
         <InputText class="input" id="value" v-model="cedula" type="text" />
         <label for="value">Cedula</label>
@@ -35,13 +35,16 @@
 <script>
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
-import Toast from "primevue/toast";
-import { useToast } from "primevue/usetoast";
 import Textarea from "primevue/textarea";
 
+//Dialogo
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+
+//Helpers
 import { obtenerEstudianteFachada } from "@/helpers/EstudiaCliente";
 import { ingresarQuejaFachada } from "@/modules/publicacion/helpers/QuejaCliente";
-import { obtenerFecha } from "@/helpers/funciones";
+import { obtenerFecha } from "@/helpers/Funciones";
 
 export default {
   components: {
@@ -79,7 +82,7 @@ export default {
         });
         return;
       }
-      
+
       try {
         this.estudiante = await obtenerEstudianteFachada(this.cedula);
       } catch (error) {
@@ -127,6 +130,7 @@ export default {
 <style scoped>
 .formulario-contenedor {
   display: flex;
+  padding: 30px;
   flex-direction: column;
   align-items: center;
   justify-content: center;

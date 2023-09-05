@@ -1,7 +1,7 @@
 <template>
   <footer>
     <div class="info">
-      <span style="font-weight: bold;">Integrantes</span>
+      <span style="font-weight: bold">Integrantes</span>
       <span>Arboleda Jumbo Cristian David</span>
       <span>Benavides Chango Andrés Sebastián</span>
       <span>Chávez García Erick Sebastián</span>
@@ -9,9 +9,13 @@
       <span>Moya Charro Christian Alexander</span>
     </div>
     <div class="info">
-      <span style="font-weight: bold;">Universidad Central del Ecuador</span>
-      <span style="font-weight: bold;">Facultad de Ingeniería y Ciencias Aplicadas</span>
-      <span style="font-weight: bold;">Carrera de Ingeniería en Computación </span>
+      <span style="font-weight: bold">Universidad Central del Ecuador</span>
+      <span style="font-weight: bold"
+        >Facultad de Ingeniería y Ciencias Aplicadas</span
+      >
+      <span style="font-weight: bold"
+        >Carrera de Ingeniería en Computación
+      </span>
       <Divider />
       <div class="imagenes">
         <img src="@/assets/logo-uce.png" />
@@ -19,7 +23,7 @@
       </div>
     </div>
     <div class="info">
-      <span style="font-weight: bold;">Edison Estuardo Cayambe Chicaiza</span>
+      <span style="font-weight: bold">Edison Estuardo Cayambe Chicaiza</span>
       <span>Programación Web</span>
       <span>Proyecto Final - Grupo 2</span>
     </div>
@@ -37,6 +41,7 @@ export default {
 
 <style scoped>
 footer {
+  font-size: 3vmin;
   display: flex;
   gap: 10%;
   background: #333;
@@ -67,7 +72,7 @@ img {
   height: 80px;
 }
 
-@media (max-width: 550px) {
+@media screen and (max-width: 550px) {
   footer {
     flex-direction: column;
     gap: 40px;

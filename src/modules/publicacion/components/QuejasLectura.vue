@@ -1,9 +1,9 @@
 <template>
-  <div class="card">
+  <div class="card" v-if="quejasAux">
     <Card
       class="contenido"
       style="width: 100%; margin-top: 2%; text-align: left"
-      v-for="queja in quejas"
+      v-for="queja in quejasAux"
       :key="queja.id"
     >
       <template #title>
@@ -26,6 +26,7 @@
           icon="pi pi-trash"
           label="Eliminar"
           severity="secondary"
+          @click="eliminar(queja.id)"
           raised
         />
         <i class="pi pi-trash"></i>
@@ -38,12 +39,22 @@
 import Card from "primevue/card";
 import Button from "primevue/button";
 
+//Dialogos
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+
+//Helpers
+import { eliminarQuejaFachada } from "@/modules/publicacion/helpers/QuejaCliente";
+
 export default {
   components: { Card, Button },
 
   data() {
     return {
+      confirm: useConfirm(),
+      toast: useToast(),
       fechaFormato: null,
+      quejasAux: null,
     };
   },
 
@@ -58,9 +69,49 @@ export default {
     },
   },
 
+  created() {
+    this.quejasAux = this.quejas;
+  },
+
   methods: {
     formatearFecha(fecha) {
       return fecha.replace("T", " / ");
+    },
+    eliminar(id) {
+      this.confirm.require({
+        message: "Se eliminará la queja",
+        header: "Confirmación de Eliminación",
+        icon: "pi pi-exclamation-triangle",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          try {
+            eliminarQuejaFachada(id);
+          } catch (e) {
+            this.toast.add({
+              severity: "error",
+              summary: "Eliminación",
+              detail: "No se logro eliminar la queja",
+              life: 3000,
+            });
+            return;
+          }
+          this.quejasAux = this.quejasAux.filter((queja) => queja.id !== id);
+          this.toast.add({
+            severity: "success",
+            summary: "Eliminado",
+            detail: "Se eliminó la queja exitosamente",
+            life: 3000,
+          });
+        },
+        reject: () => {
+          this.toast.add({
+            severity: "info",
+            summary: "Cancelado",
+            detail: "Se canceló la eliminación de la queja",
+            life: 3000,
+          });
+        },
+      });
     },
   },
 };

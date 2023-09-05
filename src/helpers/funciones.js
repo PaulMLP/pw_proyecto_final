@@ -1,3 +1,12 @@
+export function createToast(toast, severity, summary, message) {
+  toast.add({
+    severity: severity,
+    summary: summary,
+    detail: message,
+    life: 2000,
+  });
+}
+
 export function obtenerFecha() {
   const [fecha, hora] = new Date().toLocaleString().split(", ");
   const [dia, mes, anio] = fecha.split("/");

@@ -104,26 +104,27 @@ import Tag from "primevue/tag";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import NoticiaLecturaVue from "./NoticiaLectura.vue";
-import Toast from "primevue/toast";
+
+//Dialogo
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
+
+//Helpers
 import {
   ingresarNoticiaFachada,
   actualizarNoticiaFachada,
 } from "@/modules/publicacion/helpers/NoticiaCliente";
-import { obtenerFecha } from "@/helpers/funciones";
-import ConfirmDialog from "primevue/confirmdialog";
-import { useConfirm } from "primevue/useconfirm";
+import { obtenerFecha } from "@/helpers/Funciones";
+
 export default {
   components: {
     NoticiaTexto,
     NoticiaImagen,
     NoticiaVideo,
     NoticiaLecturaVue,
-    Toast,
     InputText,
     Button,
     Tag,
-    ConfirmDialog,
   },
   data() {
     return {
@@ -203,6 +204,8 @@ export default {
         header: "Confirmación de Eliminación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
           this.texto = "";
           this.isTexto = false;
@@ -215,6 +218,8 @@ export default {
         header: "Confirmación de Eliminación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
           this.imagen = "";
           this.isImagen = false;
@@ -227,6 +232,8 @@ export default {
         header: "Confirmación de Eliminación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
           this.video = "";
           this.isVideo = false;
@@ -240,6 +247,8 @@ export default {
         header: "Se limpiaran los campos",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
           this.titulo = "";
           this.isTexto = false;
@@ -350,7 +359,9 @@ export default {
         this.confirm.require({
           message: "Se editará la noticia",
           header: "Confirmación de Actualización",
-          icon: "pi pi-check-circle" ,
+          icon: "pi pi-check-circle",
+          acceptLabel: "Sí",
+          rejectLabel: "No",
           accept: () => {
             try {
               actualizarNoticiaFachada(ntc, this.noticia.id);

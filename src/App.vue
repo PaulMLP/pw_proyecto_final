@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar class="nav" />
+    <NavBar v-if="$route.name !== 'autorizacion'" class="nav" />
     <router-view class="router-view" />
     <Footer />
   </div>
@@ -8,6 +8,7 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import Footer from "@/components/Footer.vue";
+
 export default {
   components: {
     NavBar,

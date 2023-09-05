@@ -20,6 +20,16 @@
       <label for="apellido">Apellido</label>
     </span>
 
+    <div class="suscripcion">
+      <label for="suscripcion" class="ml-2"> Suscripción </label>
+      <Checkbox
+        v-model="datos.suscripcion"
+        inputId="suscripcion"
+        name="suscripcion"
+        :binary="true"
+      />
+    </div>
+
     <Button
       v-if="!opciones"
       label="Agregar Imagen"
@@ -65,6 +75,7 @@
 </template>
 
 <script>
+import Checkbox from "primevue/checkbox";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Avatar from "primevue/avatar";
@@ -72,11 +83,17 @@ import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 
 export default {
-  components: { Button, InputText, Avatar, Toast },
+  components: { Button, InputText, Avatar, Toast, Checkbox },
   data() {
     return {
       toast: useToast(),
-      datos: { cedula: "", nombre: "", apellido: "", imagen: "" },
+      datos: {
+        cedula: "",
+        nombre: "",
+        apellido: "",
+        imagen: "",
+        suscripcion: false,
+      },
 
       // Mostrar opciones de seleccion de imagen
       opciones: false,
@@ -138,14 +155,14 @@ export default {
       this.opciones = true;
       this.labelFile = "Cambiar Imagen";
       if (this.labelFile == "Cambiar Imagen") {
-        this.imagen = "";
+        this.datos.imagen = "";
         this.url = "";
       }
       this.showUrl = true;
     },
 
     cargarImagen() {
-      this.imagen = this.url;
+      this.datos.imagen = this.url;
       this.showUrl = false;
     },
 
@@ -185,6 +202,15 @@ span {
 
 .input {
   width: 100%;
+}
+
+.suscripcion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  margin-top: 20px;
+  font-size: 2.5vmin;
 }
 
 Button:hover {

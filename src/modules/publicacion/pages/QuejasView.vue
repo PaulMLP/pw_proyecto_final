@@ -29,6 +29,7 @@
     <div class="admin" v-else>
       <QuejasLectura v-if="quejas" :check="true" :quejas="quejas" />
     </div>
+    <ConfirmDialog />
     <Toast />
   </div>
 </template>
@@ -42,6 +43,8 @@ import QuejasLectura from "../components/QuejasLectura.vue";
 import { obtenerQuejasFachada } from "@/modules/publicacion/helpers/QuejaCliente";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
+import ConfirmDialog from "primevue/confirmdialog";
+import { useConfirm } from "primevue/useconfirm";
 
 export default {
   components: {
@@ -51,6 +54,7 @@ export default {
     Button,
     QuejasLectura,
     Toast,
+    ConfirmDialog,
   },
 
   data() {
@@ -64,7 +68,16 @@ export default {
   },
 
   async mounted() {
-    this.quejas = await obtenerQuejasFachada();
+    try {
+      this.quejas = await obtenerQuejasFachada();
+    } catch (error) {
+      this.toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Error al obtener quejas",
+        life: 3000,
+      });
+    }
     this.mensajeVista();
   },
 
@@ -99,11 +112,9 @@ export default {
   background: rgb(234, 234, 234);
   padding-bottom: 20px;
 }
-.p-inputswitch-slider{
-   width: 10px
+.p-inputswitch-slider {
+  width: 10px;
 }
-
-
 
 .switch {
   position: absolute;

@@ -4,6 +4,7 @@
       <InputSwitch
         class="custom-inputswitch"
         v-model="checked"
+        v-if="!noticiaEditor"
         @change="mensajeVista"
       />
     </div>
@@ -28,8 +29,8 @@
       </span>
       <div class="contraer-editor">
         <div class="filtro-fecha">
-          <i class="pi pi-calendar" />
           <Dropdown
+            dropdownIcon="pi pi-calendar"
             class="opciones-fecha"
             v-model="fechaSeleccionada"
             :options="fechas"
@@ -104,17 +105,21 @@ import NoticiaLectura from "../components/NoticiaLectura.vue";
 import Panel from "primevue/panel";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
+
+//Dialogos
 import ConfirmDialog from "primevue/confirmdialog";
 import { useConfirm } from "primevue/useconfirm";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
+
+//Helpers
 import {
   obtenerFecha,
   compararDia,
   compararSemana,
   compararMes,
   compararAnio,
-} from "@/helpers/funciones";
+} from "@/helpers/Funciones";
 export default {
   components: {
     SelectButton,
@@ -164,7 +169,17 @@ export default {
     };
   },
   async mounted() {
-    this.noticias = await obtenerNoticiasFachada();
+    try {
+      this.noticias = await obtenerNoticiasFachada();
+    } catch (error) {
+      this.toast.add({
+        severity: "info",
+        summary: "Token",
+        detail: "Error al obtener noticias, " + error.message,
+        life: 3000,
+      });
+    }
+
     this.noticiasAux = this.noticias;
     this.mensajeVista();
   },
@@ -201,9 +216,7 @@ export default {
     },
 
     addNoticia() {
-      obtenerFecha();
       this.noticiaEditor = !this.noticiaEditor;
-      this.guardar = false;
     },
 
     editarNoticia(ntc) {
@@ -214,10 +227,13 @@ export default {
     cancelar() {
       this.confirm.require({
         message: "Se cancelará la edición de la noticia",
-        header: "Confirmación de Eliminación",
+        header: "Confirmación de Cancelación",
         icon: "pi pi-exclamation-triangle",
         acceptClass: "p-button-danger",
+        acceptLabel: "Sí",
+        rejectLabel: "No",
         accept: () => {
+          this.noticia = {};
           this.noticiaEditor = false;
         },
       });
@@ -367,7 +383,6 @@ button:hover {
 }
 
 @media screen and (max-width: 470px) {
-
   .filtro-fecha i {
     display: none;
   }

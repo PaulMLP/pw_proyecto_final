@@ -53,7 +53,6 @@ export default {
     },
 
     editarEstudiante(estudiante) {
-      estudiante.suscripcion = false;
       console.log(estudiante);
       try {
         actualizarEstudianteFachada(estudiante, estudiante.id);

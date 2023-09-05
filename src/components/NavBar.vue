@@ -1,15 +1,16 @@
 <template>
-  <div>
+  <div v-if="$route.name === 'autorizacion'"></div>
+  <div v-else>
     <nav>
       <div class="logo"><img src="@/assets/IDI_logo.png" /></div>
       <div class="menu-icon" @click="toggleMenu">
         <i :class="icon" style="font-size: 5vmin"></i>
       </div>
       <ul :class="menuOpen ? 'show' : ''">
-        <router-link to="/">Inicio</router-link>
+        <router-link to="/inicio">Inicio</router-link>
         <router-link to="/noticias">Noticias</router-link>
         <router-link to="/foro">Foro</router-link>
-        <router-link to="/foro">Suscripción</router-link>
+        <router-link to="/suscripcion">Suscripción</router-link>
         <router-link to="/quejas">Quejas</router-link>
         <router-link to="/estudiantes">Estudiantes</router-link>
       </ul>
@@ -67,7 +68,7 @@ ul {
 }
 
 a {
-   font-size: 2.5vmin;
+  font-size: 2.5vmin;
   color: #6c757d;
   font-weight: bold;
   padding: 15px;
@@ -94,7 +95,7 @@ a {
   color: #3744b3;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
   .logo {
     display: none;
   }
