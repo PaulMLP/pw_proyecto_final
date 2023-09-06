@@ -5,7 +5,7 @@
     </div>
 
     <div class="foro-page" v-if="foro">
-      <ForoPostVue :foro="foro" :checked ="checked"/>
+      <ForoPostVue :foro="foro" :checked="checked" />
       <ForoAddCommentVue
         :foroId="foro.id"
         v-if="checked"
@@ -130,6 +130,7 @@ export default {
   min-width: 768px;
 }
 .foro-page {
+  min-width: 50%;
   margin-bottom: 20px;
 }
 </style>

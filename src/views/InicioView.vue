@@ -40,7 +40,9 @@
             oportunidad de ser un protagonista activo. ¿Tienes una idea genial
             que quieres compartir? ¿Quieres discutir un tema de interés con
             compañeros de ideas afines? ¡Este es el lugar perfecto para hacerlo,
-            SUSCRÍBETE!
+            SUSCRÍBETE! <br>
+
+            Por la suscripción podrás reclamar un Dorito <span style="color: red">¡GRATIS!</span>
           </p>
         </Fieldset>
       </div>

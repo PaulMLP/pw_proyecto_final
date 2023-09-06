@@ -5,7 +5,7 @@
         <Avatar :image="foro.estudiante.imagen" class="mr-2" shape="circle" />
         <div class="author-info">
           <span class="topic-ago">
-            <p>{{ foro.fecha }}</p>
+            <p>{{ this.foro.fecha.replace("T", " / ") }}</p>
           </span>
 
           <p class="author">
@@ -67,6 +67,7 @@ export default {
       forosData: null,
     };
   },
+
   methods: {
     eliminarForo(id) {
       this.confirm.require({
@@ -100,9 +101,9 @@ export default {
 .foro-post {
   display: block;
   margin-bottom: 0.5rem;
-  padding-left: 25%;
-  padding-right: 25%;
-  width: 90%;
+  padding-left: 25px;
+  padding-right: 10px;
+  width: 70%;
   border: solid 1px gainsboro;
   box-shadow: 0 0 10px gainsboro;
   border-radius: 10px;

@@ -42,42 +42,51 @@ export default {
 
   methods: {
     suscribir() {
-      this.confirm.require({
-        message: "Se suscribirá el estudiante con cédula: " + this.cedula,
-        header: "Confirmación de Suscripción",
-        icon: "pi pi-exclamation-triangle",
-        acceptLabel: "Sí",
-        rejectLabel: "No",
-        accept: async () => {
-          try {
-            await obtenerEstudianteFachada(this.cedula);
-          } catch (error) {
-            this.toast.add({
-              severity: "error",
-              summary: "Estudiante",
-              detail: "No existe el estudiante",
-              life: 3000,
-            });
-            this.$emit("crearEstudiante");
-            return;
-          }
-          try {
-            actualizarEstudianteParcialFachada({
-              cedula: this.cedula,
-              suscripcion: true,
-            });
-            this.toast.add({
-              severity: "succes",
-              summary: "Estudiante",
-              detail: "Se suscribió existosamente a el estudiante",
-              life: 3000,
-            });
-            this.cedula = "";
-          } catch (error) {
-            console.log("error");
-          }
-        },
-      });
+      if (this.cedula) {
+        this.confirm.require({
+          message: "Se suscribirá el estudiante con cédula: " + this.cedula,
+          header: "Confirmación de Suscripción",
+          icon: "pi pi-exclamation-triangle",
+          acceptLabel: "Sí",
+          rejectLabel: "No",
+          accept: async () => {
+            try {
+              await obtenerEstudianteFachada(this.cedula);
+            } catch (error) {
+              this.toast.add({
+                severity: "error",
+                summary: "Estudiante",
+                detail: "No existe el estudiante",
+                life: 3000,
+              });
+              this.$emit("crearEstudiante");
+              return;
+            }
+            try {
+              actualizarEstudianteParcialFachada({
+                cedula: this.cedula,
+                suscripcion: true,
+              });
+              this.toast.add({
+                severity: "succes",
+                summary: "Estudiante",
+                detail: "Se suscribió existosamente a el estudiante",
+                life: 3000,
+              });
+              this.cedula = "";
+            } catch (error) {
+              console.log("error");
+            }
+          },
+        });
+      } else {
+        this.toast.add({
+          severity: "warn",
+          summary: "Campos",
+          detail: "Ingrese una cédula",
+          life: 3000,
+        });
+      }
     },
   },
 };

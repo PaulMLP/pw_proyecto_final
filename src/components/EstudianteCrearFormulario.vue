@@ -62,6 +62,9 @@ export default {
           detail: "Se agrego con exito",
           life: 3000,
         });
+        setTimeout(() => {
+          this.visible = false;
+        }, 1000);
       } catch {
         this.toast.add({
           severity: "error",

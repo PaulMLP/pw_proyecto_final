@@ -62,6 +62,7 @@ export default {
           detail: "Se editó con exito",
           life: 3000,
         });
+        this.visible = false;
       } catch {
         this.toast.add({
           severity: "error",

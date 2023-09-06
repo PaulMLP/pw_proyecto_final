@@ -331,6 +331,15 @@ export default {
           };
           try {
             ingresarNoticiaFachada(ntc);
+            this.toast.add({
+              severity: "success",
+              summary: "Creado",
+              detail: "Se ingresó la noticia",
+              life: 1000,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            },1200);
           } catch (error) {
             console.log("No se pudo guardar la noticia: ");
           }

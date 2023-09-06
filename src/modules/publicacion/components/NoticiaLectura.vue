@@ -17,7 +17,6 @@
           <span>{{ fechaFormato }}</span>
         </div>
         <p v-if="noticia.texto" v-html="noticia.texto"></p>
-
         <img v-if="noticia.imagen" :src="noticia.imagen" />
 
         <iframe

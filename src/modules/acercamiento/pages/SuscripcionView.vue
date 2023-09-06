@@ -19,7 +19,6 @@ import EstudianteCrearFormulario from "@/components/EstudianteCrearFormulario.vu
 
 //Dialogo
 import Toast from "primevue/toast";
-import { useToast } from "primevue/usetoast";
 import ConfirmDialog from "primevue/confirmdialog";
 import { useConfirm } from "primevue/useconfirm";
 
